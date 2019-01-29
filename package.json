@@ -1,0 +1,28 @@
+{
+  "name": "nippo",
+  "version": "0.0.1",
+  "license": "MIT",
+  "scripts": {
+    "tslint:fix": "yarn run tslint --fix",
+    "tslint": "./node_modules/.bin/tslint -p tsconfig.json -c tslint.json --exclude '**/*.d.ts' --exclude 'node_modules/**/*.ts' 'src/**/*.ts'"
+  },
+  "dependencies": {
+    "moment": "^2.23.0",
+    "mysql": "^2.16.0",
+    "typeorm": "^0.2.12",
+    "uuid": "^3.3.2"
+  },
+  "_moduleAliases": {
+    "@src": "build/src"
+  },
+  "devDependencies": {
+    "@types/moment": "^2.13.0",
+    "@types/node": "^10.12.18",
+    "@types/uuid": "^3.4.4",
+    "ts-node": "^7.0.1",
+    "tsconfig-paths": "^3.7.0",
+    "tslint": "^5.9.1",
+    "tslint-config-standard": "^8.0.1",
+    "typescript": "^3.2.2"
+  }
+}

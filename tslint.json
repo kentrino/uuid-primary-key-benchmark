@@ -1,0 +1,14 @@
+{
+  "extends": "tslint-config-standard",
+  "rules": {
+    "max-line-length": false,
+    "semicolon": [true, "never"],
+    "quotemark": [true, "double", "avoid-escape"],
+    "no-increment-decrement": false,
+    "no-trailing-whitespace": true,
+    "ter-arrow-parens": false,
+    "trailing-comma": [true, {"multiline": "always", "singleline": "never"}],
+    "align": false,
+    "space-before-function-paren": [true, {"named":  "never"}]
+  }
+}
