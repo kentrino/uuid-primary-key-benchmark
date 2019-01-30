@@ -18,7 +18,8 @@ const asyncFileAppend = util.promisify(fs.appendFile)
 
 export type BenchmarkOption = {
   filename: string,
-  i: number
+  i: number,
+  batchSize: number,
 }
 
 export async function benchmark(opt: BenchmarkOption, func: () => Promise<void>) {
@@ -27,5 +28,5 @@ export async function benchmark(opt: BenchmarkOption, func: () => Promise<void>)
   await func()
   const end = process.hrtime(start)
   const ms = calcMilliseconds(end)
-  await asyncFileAppend(file, `${opt.i}: ${ms}\n`)
+  await asyncFileAppend(file, `${opt.i}, ${opt.batchSize}, ${ms}\n`)
 }

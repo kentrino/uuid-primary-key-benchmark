@@ -2,7 +2,6 @@ import { uuid } from "./util"
 import { Entity, Column, PrimaryGeneratedColumn, ColumnOptions, PrimaryColumn } from "typeorm"
 import { PrimaryGeneratedColumnNumericOptions } from "typeorm/decorator/options/PrimaryGeneratedColumnNumericOptions"
 
-
 @Entity("neo_users")
 export class NeoUser {
   @PrimaryGeneratedColumn({ name: "id", type: "bigint" } as PrimaryGeneratedColumnNumericOptions)

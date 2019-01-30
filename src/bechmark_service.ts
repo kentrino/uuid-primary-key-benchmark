@@ -12,8 +12,6 @@ export class BenchmarkService<T extends NeoUser | User> {
     private prefix: string,
     private repository: Repository<T>,
     private factory: Constructable<T>,
-    private smallBachSize: number,
-    public largeBatchSize: number,
   ) {}
 
   async createUser(i: number, repository: Repository<T>): Promise<T> {
@@ -24,19 +22,20 @@ export class BenchmarkService<T extends NeoUser | User> {
 
   async getUserById(ids: Id[], repository: Repository<T>): Promise<T[]> {
     const users = await repository.findByIds(ids)
-    return users as T[]
+    return users
   }
 
-  async benchmarkCreateFind10(start: number) {
+  async benchmarkCreateFind10(start: number, largeBatchSize: number, smallBatchSize: number) {
     const thousandUsers: T[] = []
-    for (let i = start; i < start + this.largeBatchSize; i += this.smallBachSize) {
+    for (let i = start; i < start + largeBatchSize; i += smallBatchSize) {
       await benchmark({
-        filename: `${this.prefix}_create_${this.smallBachSize}`,
+        filename: `${this.prefix}_create`,
         i: i,
+        batchSize: smallBatchSize,
       }, async () => {
         const users: T[] = []
-        for (let j = i; j < i + this.smallBachSize; ++j) {
-          const user = new this.factory(j) as T
+        for (let j = i; j < i + smallBatchSize; ++j) {
+          const user = new this.factory(j)
           users.push(user)
           thousandUsers.push(user)
         }
@@ -45,8 +44,9 @@ export class BenchmarkService<T extends NeoUser | User> {
     }
     const ids = thousandUsers.map((u) => u.id)
     await benchmark({
-      filename: `${this.prefix}_find_${this.largeBatchSize}`,
+      filename: `${this.prefix}_find`,
       i: start,
+      batchSize: largeBatchSize,
     }, async () => {
       await this.getUserById(ids, this.repository)
     })
