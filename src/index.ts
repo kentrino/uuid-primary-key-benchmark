@@ -16,10 +16,10 @@ async function getUserById(ids: string[], repository: Repository<User>): Promise
 
 async function benchmarkCreateFind10(start: number, repository: Repository<User>) {
   const thousandUsers: User[] = []
-  for (let i = start; i < start + 1000; i += 100) {
+  for (let i = start; i < start + 10000; i += 1000) {
     await benchmark("create", async () => {
       const users: User[] = []
-      for (let j = i; j < i + 100; ++j) {
+      for (let j = i; j < i + 1000; ++j) {
         const user = new User(j)
         users.push(user)
         thousandUsers.push(user)
@@ -36,7 +36,7 @@ async function benchmarkCreateFind10(start: number, repository: Repository<User>
 async function main() {
   const connection = await createConnection(options)
   const userRepository = connection.getRepository(User)
-  for (let i = 0; i < 100000000; i += 1000) {
+  for (let i = 0; i < 100000000; i += 10000) {
     await benchmarkCreateFind10(i, userRepository)
   }
   await connection.close()
