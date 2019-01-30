@@ -16,11 +16,16 @@ function calcMilliseconds(time: number[]): number {
 
 const asyncFileAppend = util.promisify(fs.appendFile)
 
-export async function benchmark(name: string, func: () => Promise<void>) {
-  const file = path.join(dataDir, `${name}.dat`)
+export type BenchmarkOption = {
+  filename: string,
+  i: number
+}
+
+export async function benchmark(opt: BenchmarkOption, func: () => Promise<void>) {
+  const file = path.join(dataDir, `${opt.filename}.dat`)
   const start = process.hrtime()
   await func()
   const end = process.hrtime(start)
   const ms = calcMilliseconds(end)
-  await asyncFileAppend(file, `${ms}ms\n`)
+  await asyncFileAppend(file, `${opt.i}: ${ms}\n`)
 }

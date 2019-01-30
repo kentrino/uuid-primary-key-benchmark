@@ -30,7 +30,10 @@ export class BenchmarkService<T extends NeoUser | User> {
   async benchmarkCreateFind10(start: number) {
     const thousandUsers: T[] = []
     for (let i = start; i < start + this.largeBatchSize; i += this.smallBachSize) {
-      await benchmark(`${this.prefix}_create_${this.smallBachSize}`, async () => {
+      await benchmark({
+        filename: `${this.prefix}_create_${this.smallBachSize}`,
+        i: i,
+      }, async () => {
         const users: T[] = []
         for (let j = i; j < i + this.smallBachSize; ++j) {
           const user = new this.factory(j) as T
@@ -41,7 +44,10 @@ export class BenchmarkService<T extends NeoUser | User> {
       })
     }
     const ids = thousandUsers.map((u) => u.id)
-    await benchmark(`${this.prefix}_find_${this.largeBatchSize}`, async () => {
+    await benchmark({
+      filename: `${this.prefix}_find_${this.largeBatchSize}`,
+      i: start,
+    }, async () => {
       await this.getUserById(ids, this.repository)
     })
   }
