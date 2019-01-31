@@ -2,7 +2,6 @@ import { uuid } from "./util"
 import { Entity, Column, PrimaryGeneratedColumn, ColumnOptions, PrimaryColumn } from "typeorm"
 import { PrimaryGeneratedColumnNumericOptions } from "typeorm/decorator/options/PrimaryGeneratedColumnNumericOptions"
 
-
 @Entity("neo_users")
 export class NeoUser {
   @PrimaryGeneratedColumn({ name: "id", type: "bigint" } as PrimaryGeneratedColumnNumericOptions)
@@ -42,7 +41,6 @@ export class NeoUser {
   updatedAt: Date
 
   constructor(i: number) {
-    super()
     this.familyName = uuid(i, "familyName")
     this.givenName = uuid(i, "givenName")
     this.nickname = uuid(i, "nickname")

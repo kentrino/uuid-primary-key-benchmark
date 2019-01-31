@@ -8,11 +8,19 @@ import { Constructable } from "./Constructable"
 
 async function runBenchmark(connection: Connection, prefix: string, model: Constructable<User | NeoUser>) {
   const userRepository = connection.getRepository(model)
-  const benchmarkService = new BenchmarkService(prefix, userRepository, model, 100, 1000)
+  const benchmarkService = new BenchmarkService(prefix, userRepository, model)
   const count = (await userRepository.query(`select count(*) as cnt from users`))[0] as {cnt: string}
-  const start = parseInt(count.cnt)
-  for (let i = start; i < 100000000; i += benchmarkService.largeBatchSize) {
-    await benchmarkService.benchmarkCreateFind10(i)
+  const start = parseInt(count.cnt, 10)
+  let smallBatchSize = 1000
+  let largeBatchSize = smallBatchSize * 10
+  for (let i = start; i < 100000000; i += largeBatchSize) {
+    await benchmarkService.benchmarkCreateFind10(i, largeBatchSize, smallBatchSize)
+    if (Math.floor(Math.random() * 5) === 0) {
+      smallBatchSize = 10
+    } else {
+      smallBatchSize = 1000
+    }
+    largeBatchSize = smallBatchSize * 10
   }
 }
 
