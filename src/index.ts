@@ -5,11 +5,12 @@ import { ConnectionOptions, createConnection, Repository, Connection } from "typ
 import { options } from "./db"
 import { BenchmarkService } from "./BenchmarkService"
 import { Constructable } from "./Constructable"
+import { ArgumentParser } from "argparse"
 
-async function runBenchmark(connection: Connection, prefix: string, model: Constructable<User | NeoUser>) {
+async function runBenchmark(connection: Connection, tableName: string, model: Constructable<User | NeoUser>) {
   const userRepository = connection.getRepository(model)
-  const benchmarkService = new BenchmarkService(prefix, userRepository, model)
-  const count = (await userRepository.query(`select count(*) as cnt from users`))[0] as {cnt: string}
+  const benchmarkService = new BenchmarkService(tableName, userRepository, model)
+  const count = (await userRepository.query(`select count(*) as cnt from ${tableName}`))[0] as {cnt: string}
   const start = parseInt(count.cnt, 10)
   let smallBatchSize = 1000
   let largeBatchSize = smallBatchSize * 10
@@ -25,11 +26,36 @@ async function runBenchmark(connection: Connection, prefix: string, model: Const
 }
 
 async function main() {
+  const args = parseArgs()
   const connection = await createConnection(options)
-  const userBenchmarkPromise = runBenchmark(connection, "user", User)
-  const neoUserBenchmarkPromise = runBenchmark(connection, "neo_user", NeoUser)
-  await Promise.all([userBenchmarkPromise, neoUserBenchmarkPromise])
+  if (args.table === "users") {
+    await runBenchmark(connection, "users", User)
+  } else {
+    await runBenchmark(connection, "neo_users", NeoUser)
+  }
   await connection.close()
+}
+
+type Args = {
+  table: "users" | "neo_users",
+}
+
+function parseArgs(): Args {
+  const parser = new ArgumentParser({
+    addHelp: true,
+    description: "mysql benchmark",
+  })
+  parser.addArgument(
+    [ "-t", "--table" ],
+    {
+      help: "table name",
+    },
+  )
+  const args = parser.parseArgs()
+  if (args.table !== "users" && args.table !== "neo_users") {
+    throw Error("You must specify table name correctly.")
+  }
+  return args
 }
 
 main().catch(console.error)
