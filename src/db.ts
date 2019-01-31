@@ -7,7 +7,7 @@ export const options: ConnectionOptions = {
   database: "test",
   entities: [ User, NeoUser ],
   logging: false,
-  password: "test",
+  password: process.env.DB_PASSWORD,
   username: "root",
-  host: "127.0.0.1",
+  host: process.env.DB_HOST,
 }
