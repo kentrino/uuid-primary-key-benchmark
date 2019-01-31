@@ -1,4 +1,4 @@
-const uuidv5 = require("uuid/v5")
+import * as uuidv5 from "uuid/v5"
 import * as util from "util"
 import { dataDir } from "./paths"
 import * as fs from "fs"

@@ -1,4 +1,4 @@
-import { User } from "./user"
+import { User } from "./User"
 import { ConnectionOptions, createConnection, Repository } from "typeorm"
 
 export const options: ConnectionOptions = {

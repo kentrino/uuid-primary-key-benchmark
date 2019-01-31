@@ -1,9 +1,9 @@
 import { uuid, benchmark } from "./util"
-import { User } from "./user"
-import { NeoUser } from "./neo_user"
+import { User } from "./User"
+import { NeoUser } from "./NeoUser"
 import { ConnectionOptions, createConnection, Repository, ObjectLiteral, DeepPartial } from "typeorm"
 import { options } from "./db"
-import { Constructable } from "./user_factory"
+import { Constructable } from "./Constructable"
 
 type Id = string | number
 
