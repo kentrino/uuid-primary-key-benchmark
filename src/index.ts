@@ -26,7 +26,9 @@ async function runBenchmark(connection: Connection, prefix: string, model: Const
 
 async function main() {
   const connection = await createConnection(options)
-  await runBenchmark(connection, "user", User)
+  const userBenchmarkPromise = runBenchmark(connection, "user", User)
+  const neoUserBenchmarkPromise = runBenchmark(connection, "neo_user", NeoUser)
+  await Promise.all([userBenchmarkPromise, neoUserBenchmarkPromise])
   await connection.close()
 }
 
